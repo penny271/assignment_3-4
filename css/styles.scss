@@ -1,0 +1,35 @@
+.radios {
+   margin: 0;
+   padding: 0;
+   // display: inline-block;
+}
+
+input {
+   margin: 0 5px 0 0;
+}
+
+td {
+   &.hidden {
+      display: none;
+   }
+}
+
+button {
+   background-color: #fff;
+   border-radius: 6px;
+   border: 1px solid rgb(165, 162, 162);
+   &:hover {
+      background-color: rgb(42, 75, 203);
+      color: #fff;
+   }
+}
+
+ul {
+   margin: 0;
+   padding: 0;
+}
+
+li {
+   list-style: none;
+}
+

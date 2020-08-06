@@ -1,0 +1,33 @@
+.radios {
+  margin: 0;
+  padding: 0;
+}
+
+input {
+  margin: 0 5px 0 0;
+}
+
+td.hidden {
+  display: none;
+}
+
+button {
+  background-color: #fff;
+  border-radius: 6px;
+  border: 1px solid #a5a2a2;
+}
+
+button:hover {
+  background-color: #2a4bcb;
+  color: #fff;
+}
+
+ul {
+  margin: 0;
+  padding: 0;
+}
+
+li {
+  list-style: none;
+}
+/*# sourceMappingURL=styles.css.map */
