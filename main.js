@@ -32,12 +32,17 @@
          tr.classList.add('addedTr');
          const idTd = document.createElement('td');
          const commentTd = document.createElement('td');
+
          const conditionWorkingTd = document.createElement('td');
+         conditionWorkingTd.classList.add('working'); //-NEW
+
          const conditionCompleteTd = document.createElement('td');
+
          const conditionDeleteTd = document.createElement('td');
-         const buttonTabForWorking = document.createElement('button'); //-NEW
-         const buttonTabForComplete = document.createElement('button'); //-NEW
-         const buttonTabForDelete = document.createElement('button'); //-NEW
+
+         const buttonTabForWorking = document.createElement('button');
+         const buttonTabForComplete = document.createElement('button');
+         const buttonTabForDelete = document.createElement('button');
          conditionCompleteTd.classList.add('hidden');
 
          //¥削除機能:削除ボタンが押された時に押された要素を削除する
@@ -47,15 +52,20 @@
             //return;
          });
 
-         //^作業中、削除ボタンを押したときにタスクの状態を変える
+         //^作業中ボタンを押したときにタスクの状態を変える
          conditionWorkingTd.addEventListener('click', () => {
             conditionWorkingTd.classList.add('hidden');
+            conditionWorkingTd.classList.remove('working'); //-NEW
             conditionCompleteTd.classList.remove('hidden');
+            conditionCompleteTd.classList.add('complete'); //-NEW
          });
 
+         //^完了ボタンを押したときにタスクの状態を変える
          conditionCompleteTd.addEventListener('click', () => {
             conditionWorkingTd.classList.remove('hidden');
+            conditionWorkingTd.classList.add('working'); //-NEW
             conditionCompleteTd.classList.add('hidden');
+            conditionCompleteTd.classList.remove('complete'); //-NEW
          });
 
          //-DOM操作＿描画
@@ -67,17 +77,53 @@
          commentTd.textContent = tasks[index].comment; // タスク入力値
 
          tr.appendChild(conditionWorkingTd); // 3つ目
-         conditionWorkingTd.appendChild(buttonTabForWorking); //-New
-         buttonTabForWorking.textContent = '作業中'; //-New
+         conditionWorkingTd.appendChild(buttonTabForWorking);
+         buttonTabForWorking.textContent = '作業中';
 
-         //! ※2つ目の3つ目- .hiddenで初期状態では不可視
          tr.appendChild(conditionCompleteTd); // 3つ目※
-         conditionCompleteTd.appendChild(buttonTabForComplete); //-New
-         buttonTabForComplete.textContent = '完了'; //-New
+         conditionCompleteTd.appendChild(buttonTabForComplete);
+         buttonTabForComplete.textContent = '完了';
 
          tr.appendChild(conditionDeleteTd); // 4つ目
          conditionDeleteTd.appendChild(buttonTabForDelete);
          buttonTabForDelete.textContent = '削除';
+
+         //- タスク表示、非表示切り替え機能
+         const radioButtons = document.querySelectorAll('input');
+
+         for (let i = 0; i < document.radioConditions.rdo.length; i++) {
+            radioButtons[i].addEventListener('click', () => {
+               const workingStateTargets = document.querySelectorAll(
+                  '.working'
+               );
+               const completeStateTargets = document.querySelectorAll(
+                  '.complete'
+               );
+               const trHiddenTargets = document.querySelectorAll('tr.hidden');
+               if (radioButtons[0].checked) {
+                  trHiddenTargets.forEach((hid) => {
+                     hid.classList.remove('hidden');
+                  });
+               }
+               if (radioButtons[1].checked) {
+
+                  completeStateTargets.forEach((CompleteTarget) => {
+                     CompleteTarget.closest('tr').classList.add('hidden');
+                  });
+                  workingStateTargets.forEach((workingTarget) => {
+                     workingTarget.closest('tr').classList.remove('hidden');
+                  });
+               }
+               if (radioButtons[2].checked) {
+                  workingStateTargets.forEach((workingTarget) => {
+                     workingTarget.closest('tr').classList.add('hidden');
+                  });
+                  completeStateTargets.forEach((CompleteTarget) => {
+                     CompleteTarget.closest('tr').classList.remove('hidden');
+                  });
+               }
+            });
+         }
       });
    };
 
