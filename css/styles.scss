@@ -8,10 +8,14 @@ input {
    margin: 0 5px 0 0;
 }
 
-td {
-   &.hidden {
-      display: none;
-   }
+// td {
+//    &.hidden {
+//       display: none;
+//    }
+// }
+
+.hidden {
+   display: none;
 }
 
 button {

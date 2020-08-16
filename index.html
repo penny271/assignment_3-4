@@ -1,19 +1,20 @@
+<!-- https://www.youtube.com/watch?v=b8sUhU_eq3g -->
 <!DOCTYPE html>
 <html lang="ja">
 
 <head>
   <meta charset="UTF-8" />
-  <title>課題③-3</title>
+  <title>課題3-4</title>
   <link rel="stylesheet" href="css/styles.css" />
 </head>
 
 <body>
   <h1>ToDoリスト</h1>
-  <div class="radios">
-    <input type="radio" name="rdo" checked />すべて
-    <input type="radio" name="rdo" />作業中
-    <input type="radio" name="rdo" />完了
-  </div>
+  <form name="radioConditions">
+    <input type="radio" name="rdo" job="ALL" checked />すべて
+    <input type="radio" name="rdo" job="WORKING" />作業中
+    <input type="radio" name="rdo" job="COMPLETE" />完了
+  </form>
 
   <div>
     <table>
@@ -28,7 +29,13 @@
       <tbody id="addTaskTarget">
         <!-- 実装されたイメージを持つために以下を一時的に作成 -->
 
-        <!-- <tr>
+        <!-- <tr hidden>
+          <td>0</td>
+          <td>aaa</td>
+          <td id="working"><button>作業中</button></td>
+          <td id="remove"><button>削除</button></td>
+        </tr>
+        <tr hidden>
           <td>0</td>
           <td>aaa</td>
           <td id="working"><button>作業中</button></td>
