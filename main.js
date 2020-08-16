@@ -13,6 +13,7 @@
       let task = {
          id: idNum,
          comment: input.value,
+         working: true, //-作業中の状態をtrue, 完了の状態をfalseとする
       };
 
       tasks.push(task);
@@ -22,8 +23,6 @@
 
    //todoのタスクを作成及び結果をブラウザに表示
    const displayTasks = () => {
-      //¥初期化処理 - ここでブラウザに表示されるtrを
-      //¥全て削除することで画面上タスクを見えなくする
       document.querySelectorAll('.addedTr').forEach((tr) => {
          tr.remove();
       });
@@ -34,16 +33,27 @@
          const commentTd = document.createElement('td');
 
          const conditionWorkingTd = document.createElement('td');
-         conditionWorkingTd.classList.add('working'); //-NEW
+         conditionWorkingTd.classList.add('working');
 
          const conditionCompleteTd = document.createElement('td');
+         conditionCompleteTd.classList.add('complete');
 
          const conditionDeleteTd = document.createElement('td');
 
          const buttonTabForWorking = document.createElement('button');
          const buttonTabForComplete = document.createElement('button');
          const buttonTabForDelete = document.createElement('button');
-         conditionCompleteTd.classList.add('hidden');
+
+         //-オブジェクトのキーと値の状態でdisplayTasks()後もタスクの表示状態を維持する
+         if (tasks[index].working === true) {
+            conditionCompleteTd.classList.add('hidden');
+            conditionCompleteTd.classList.toggle('complete');
+            conditionWorkingTd.classList.remove('hidden');
+         } else {
+            conditionCompleteTd.classList.remove('hidden');
+            conditionWorkingTd.classList.add('hidden');
+            conditionWorkingTd.classList.toggle('working');
+         }
 
          //¥削除機能:削除ボタンが押された時に押された要素を削除する
          conditionDeleteTd.addEventListener('click', () => {
@@ -55,17 +65,21 @@
          //^作業中ボタンを押したときにタスクの状態を変える
          conditionWorkingTd.addEventListener('click', () => {
             conditionWorkingTd.classList.add('hidden');
-            conditionWorkingTd.classList.remove('working'); //-NEW
+            conditionWorkingTd.classList.remove('working');
             conditionCompleteTd.classList.remove('hidden');
-            conditionCompleteTd.classList.add('complete'); //-NEW
+            conditionCompleteTd.classList.add('complete');
+
+            tasks[index].working = false;
          });
 
          //^完了ボタンを押したときにタスクの状態を変える
          conditionCompleteTd.addEventListener('click', () => {
             conditionWorkingTd.classList.remove('hidden');
-            conditionWorkingTd.classList.add('working'); //-NEW
+            conditionWorkingTd.classList.add('working');
             conditionCompleteTd.classList.add('hidden');
-            conditionCompleteTd.classList.remove('complete'); //-NEW
+            conditionCompleteTd.classList.remove('complete');
+
+            tasks[index].working = true;
          });
 
          //-DOM操作＿描画
@@ -89,41 +103,58 @@
          buttonTabForDelete.textContent = '削除';
 
          //- タスク表示、非表示切り替え機能
-         const radioButtons = document.querySelectorAll('input');
+         const form = document.getElementsByName('radioConditions');
 
-         for (let i = 0; i < document.radioConditions.rdo.length; i++) {
-            radioButtons[i].addEventListener('click', () => {
-               const workingStateTargets = document.querySelectorAll(
-                  '.working'
-               );
-               const completeStateTargets = document.querySelectorAll(
-                  '.complete'
-               );
-               const trHiddenTargets = document.querySelectorAll('tr.hidden');
-               if (radioButtons[0].checked) {
-                  trHiddenTargets.forEach((hid) => {
-                     hid.classList.remove('hidden');
-                  });
-               }
-               if (radioButtons[1].checked) {
+         //-ラジオボタンを押した後の各挙動_すべてを押した場合
+         const activateAll = () => {
+            const trHiddenTargets = document.querySelectorAll('tr.hidden'); //-NEW
+            trHiddenTargets.forEach((hid) => {
+               hid.classList.remove('hidden');
+            });
+         };
 
-                  completeStateTargets.forEach((CompleteTarget) => {
-                     CompleteTarget.closest('tr').classList.add('hidden');
-                  });
-                  workingStateTargets.forEach((workingTarget) => {
-                     workingTarget.closest('tr').classList.remove('hidden');
-                  });
-               }
-               if (radioButtons[2].checked) {
-                  workingStateTargets.forEach((workingTarget) => {
-                     workingTarget.closest('tr').classList.add('hidden');
-                  });
-                  completeStateTargets.forEach((CompleteTarget) => {
-                     CompleteTarget.closest('tr').classList.remove('hidden');
-                  });
+         //-ラジオボタンを押した後の各挙動_作業中を押した場合
+         const activateWorking = () => {
+            const classCompleteTargets = document.querySelectorAll('.complete');
+            const classWorkingTargets = document.querySelectorAll('.working'); //! .working　忘れ//-NEW
+            classWorkingTargets.forEach((work) => {
+               if (work.parentNode.classList.contains('hidden')) {
+                  work.parentNode.classList.remove('hidden');
                }
             });
-         }
+            classCompleteTargets.forEach((complete) => {
+               complete.parentNode.classList.add('hidden');
+            });
+         };
+
+         //-ラジオボタンを押した後の各挙動_完了を押した場合
+         const activateComplete = () => {
+            const classCompleteTargets = document.querySelectorAll('.complete');
+            const classWorkingTargets = document.querySelectorAll('.working');
+            classWorkingTargets.forEach((work) => {
+               work.parentNode.classList.add('hidden');
+               // work.ParentNode.classList.add('hidden');
+            });
+            classCompleteTargets.forEach((complete) => {
+               complete.parentNode.classList.remove('hidden');
+            });
+         };
+
+         //-ラジオボタンの選択及び条件に応じた関数の実行
+         document.querySelector('form').addEventListener('click', (event) => {
+            const element = event.target;
+            const elementJob = element.attributes.job.value;
+
+            if (elementJob === 'ALL') {
+               activateAll();
+            }
+            if (elementJob === 'WORKING') {
+               activateWorking();
+            }
+            if (elementJob === 'COMPLETE') {
+               activateComplete();
+            }
+         });
       });
    };
 
@@ -131,5 +162,11 @@
    addTaskTrigger.addEventListener('click', () => {
       addTask();
       input.value = '';
+   });
+   document.getElementById('input').addEventListener('keyup', (event) => {
+      if (event.keyCode === 13) {
+         addTask();
+         input.value = '';
+      }
    });
 }
